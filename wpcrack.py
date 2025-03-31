@@ -36,17 +36,25 @@ class WPCrack:
     def check_handshake(self):
         """ Vérifie si le fichier de capture contient un handshake valide """
         process = subprocess.run(
-            ["aircrack-ng", "-r", self.pcap_file],
+            ["aircrack-ng", self.pcap_file],
             capture_output=True,
             text=True
         )
-        
-        if "1 handshake" in process.stdout or "2 handshake" in process.stdout:
+    
+        if "handshake" in process.stdout.lower():
             print("[✔] Handshake détecté, prêt pour le brute force.")
             return True
         else:
             print("[✘] Aucun handshake détecté, vérifiez votre fichier de capture.")
             return False
+
+    @staticmethod
+    def check_wordlist(wordlist_path):
+        """ Vérifie si le fichier de mot de passe est vide """
+        if os.path.getsize(wordlist_path) == 0:
+            print("[✘] La wordlist est vide, impossible de continuer.")
+            return False
+        return True
 
     @staticmethod
     def validate_path(file_path):
@@ -74,6 +82,9 @@ def main():
     
     if not wpcrack.check_handshake():
         raise SystemExit("Impossible de continuer, le fichier ne contient pas de handshake valide.")
+
+    if not wpcrack.check_wordlist(wordlist_path):
+        raise SystemExit("Impossible de continuer, le fichier de mot de passe est vide.")
     
     try:
         start_time = time.time()
