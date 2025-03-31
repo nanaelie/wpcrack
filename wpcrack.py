@@ -33,6 +33,21 @@ class WPCrack:
 
         return None
 
+    def check_handshake(self):
+        """ Vérifie si le fichier de capture contient un handshake valide """
+        process = subprocess.run(
+            ["aircrack-ng", "-r", self.pcap_file],
+            capture_output=True,
+            text=True
+        )
+        
+        if "1 handshake" in process.stdout or "2 handshake" in process.stdout:
+            print("[✔] Handshake détecté, prêt pour le brute force.")
+            return True
+        else:
+            print("[✘] Aucun handshake détecté, vérifiez votre fichier de capture.")
+            return False
+
     @staticmethod
     def validate_path(file_path):
         """ Vérifie si un fichier existe et est accessible. """
@@ -56,7 +71,10 @@ def main():
         raise ValueError("Format de fichier non supporté (doit être .pcap, .ivs ou .cap).")
 
     wpcrack = WPCrack(bssid=args.bssid, pcap_file=args.file)
-
+    
+    if not wpcrack.check_handshake():
+        raise SystemExit("Impossible de continuer, le fichier ne contient pas de handshake valide.")
+    
     try:
         start_time = time.time()
         with open(wordlist_path, "r", encoding="utf-8", errors="ignore") as wordlist_file:
