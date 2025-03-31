@@ -30,6 +30,11 @@ python3 wpcrack.py --bssid <BSSID> --wlst <wordlist.txt> --file <capture.pcap>
 python3 wpcrack.py --bssid 00:11:22:33:44:55 --wlst rockyou.txt --file handshake.pcap
 ```
 
+## Aide sur l'utilisation de l'outil
+```bash
+python3 wpcrack.py --help
+```
+
 ## Licence
 Ce projet est sous licence MIT. Vous êtes libre de l'utiliser, le modifier et le redistribuer sous les termes de cette licence.
 
