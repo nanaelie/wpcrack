@@ -41,7 +41,7 @@ class WPCrack:
             text=True
         )
     
-        if "handshake" in process.stdout.lower():
+        if "1 handshake" in process.stdout.lower() or "2 handshakes" in process.stdout.lower():
             print("[✔] Handshake détecté, prêt pour le brute force.")
             return True
         else:
